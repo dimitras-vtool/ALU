@@ -14,6 +14,8 @@ result_add,
 start
 );
 
+//The adder of the ALU as seen in the top module diagram. Apart from producing the result, this file includes the handshake generation.
+
 parameter DATA_SIZE;
 parameter ID_SIZE; 
 

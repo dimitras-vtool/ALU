@@ -17,6 +17,8 @@ id_add,
 id_mul
 );
 
+// The control unit responsible for the communication between FIFO_IN and CSR module, mainly. For more details read documentation.
+
 
 //CTRL 
 parameter OPERATION_BIT;    //The lowest bit position storing the operation in CTRL_REG (and also in FIFO, 

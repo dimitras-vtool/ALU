@@ -6,6 +6,9 @@ operation,
 s,
 cout);
 
+//A simple adder or subtractor (unsigned) using the carry-look ahead method. 
+//This file is instantieted into the adder.v file.
+
 parameter DATA_SIZE;
 
 input [(DATA_SIZE-1):0] a1; 

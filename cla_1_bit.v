@@ -5,6 +5,7 @@ cin,
 s,
 c_out);
 
+//A 1 bit carry-look ahead adder, instantiated in the add_sub file where a DATA_SIZE long adder is implemented.
 
 input  a1; 
 input  a2;

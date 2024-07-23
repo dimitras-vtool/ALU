@@ -13,6 +13,8 @@ result_mul,
 start
 );
 
+//The multiplier of the ALU. There is a shift and add algorithm implemented. A 16-bit carry look-ahead adder is used.
+
 parameter DATA_SIZE;
 parameter MUL_DATA_SIZE;
 parameter ID_SIZE;

@@ -12,6 +12,8 @@ sum_written,
 mul_written
 );
 
+// The control unit responsible for the communication between FIFO_OUT and ALU module, mainly. For more details read documentation.
+
 parameter FIFO_OUT_WIDTH;  //saving 8-bit ID together with result
 
 parameter DATA_SIZE;
