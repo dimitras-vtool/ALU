@@ -18,7 +18,8 @@ r_en_out,
 w_en_in
 );
 
-      
+//A top module including the control-status registers and their communication via APB or with the rest of the ALU design.   
+   
 parameter REG_NUMBER;       //How many registers we have.
 
 parameter REG_CTRL;

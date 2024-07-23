@@ -12,6 +12,8 @@ full,
 empty
 );
 
+//UNit generating the flags empty and full. Also the cr_en and cw_en enable signals.
+
 parameter MEMORY_DEPTH = 4;
 parameter FIFO_ADDRESS_SIZE = 2;
 

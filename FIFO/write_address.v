@@ -5,6 +5,8 @@ cw_en,
 w_ptr,
 cw_max);
 
+//This file generates the pointer for writing in the FIFO
+
 parameter MEMORY_DEPTH = 4;
 parameter FIFO_ADDRESS_SIZE = 2;
 

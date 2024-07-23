@@ -16,6 +16,7 @@ final_result,
 fifo_out_status
 );
 
+//The registers of the CSR unit. Any control signals are produced in csr_control.v
 
 parameter OPERATION_BIT; 
 parameter OPERATION_SIZE; 

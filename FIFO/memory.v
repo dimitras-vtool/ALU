@@ -8,6 +8,9 @@ w_ptr,
 r_ptr,
 rdata);
 
+//Memory of FIFO. It was implemented using a memory array or a memory IP. 
+//The IP memory instantiated here, was added during testing the design on Vivado.
+
 parameter MEMORY_WIDTH = 4;
 parameter MEMORY_DEPTH = 4;
 

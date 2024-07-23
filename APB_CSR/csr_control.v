@@ -21,7 +21,8 @@ w_en_in,
 rdata
 );
 
-       
+//Contol unit of the control_status registers. An APB slave is implemented and the en signals for the registers are produced.       
+
 parameter REG_NUMBER;       //How many registers we have.
 
 parameter REG_CTRL;

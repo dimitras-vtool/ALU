@@ -8,6 +8,8 @@ full,
 empty,
 rdata);
 
+//Top module of FIFO.
+
 
 parameter MEMORY_WIDTH = 4;
 parameter MEMORY_DEPTH = 4;

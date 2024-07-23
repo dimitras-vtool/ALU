@@ -4,6 +4,8 @@ rst_n,
 cr_en,
 r_ptr);
 
+//This file generates the pointer for reading from the FIFO
+
 parameter MEMORY_DEPTH = 4;
 parameter FIFO_ADDRESS_SIZE = 3;
 
