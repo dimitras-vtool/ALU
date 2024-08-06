@@ -14,11 +14,11 @@ mul_written
 
 // The control unit responsible for the communication between FIFO_OUT and ALU module, mainly. For more details read documentation.
 
-parameter FIFO_OUT_WIDTH;  //saving 8-bit ID together with result
+parameter FIFO_OUT_WIDTH  = 25;  //saving 8-bit ID together with result
 
-parameter DATA_SIZE;
-parameter MUL_DATA_SIZE;
-parameter ID_SIZE ;
+parameter DATA_SIZE       = 16;
+parameter MUL_DATA_SIZE   = (DATA_SIZE/2);
+parameter ID_SIZE         = 8;
  
 input clk;
 input rst_n;     

@@ -9,7 +9,7 @@ q);
 
 //A roght shift register, loading data in parallel and shifting them right, based on the input shift-load.
 
-parameter DATA_SIZE;
+parameter DATA_SIZE  = 8;
 
 input clk; 
 input rst_n;

@@ -4,8 +4,8 @@ rst,
 d,
 q);
 
-parameter SIZE;
-parameter RESET_VALUE;
+parameter SIZE = 1;
+parameter RESET_VALUE = 0;
 
 input clk;
 input rst;

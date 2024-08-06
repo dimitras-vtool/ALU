@@ -15,9 +15,9 @@ start
 
 //The multiplier of the ALU. There is a shift and add algorithm implemented. A 16-bit carry look-ahead adder is used.
 
-parameter DATA_SIZE;
-parameter MUL_DATA_SIZE;
-parameter ID_SIZE;
+parameter DATA_SIZE     = 16;
+parameter MUL_DATA_SIZE = (DATA_SIZE/2);
+parameter ID_SIZE       = 8; 
 localparam MUL_COUNTER_SIZE = ($clog2(MUL_DATA_SIZE)+1);  //Counter needs to count MUL_DATA_SIZE times, before the multiplication ends
                                                      //It the number of shifts that have occured 
 

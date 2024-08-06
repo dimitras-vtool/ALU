@@ -21,15 +21,15 @@ id_mul
 
 
 //CTRL 
-parameter OPERATION_BIT;    //The lowest bit position storing the operation in CTRL_REG (and also in FIFO, 
-						    //since in the fifo memory they are saved as {data1, data0, ctrl}).
-parameter OPERATION_SIZE ;  //(example: if bits 2 and 1 of ctrl_data are 01 for ADD and 10 for MUL, OPERATION_BIT would be 1).
-parameter ID_SIZE;
-parameter ID_BIT;  			//The lowest bit position storing the ID in CTRL_REG.
+parameter OPERATION_BIT  = 1;    //The lowest bit position storing the operation in CTRL_REG (and also in FIFO, 
+						         //since in the fifo memory they are saved as {data1, data0, ctrl}).
+parameter OPERATION_SIZE = 2;   //(example: if bits 2 and 1 of ctrl_data are 01 for ADD and 10 for MUL, OPERATION_BIT would be 1).
+parameter ID_SIZE        = 8;
+parameter ID_BIT         = 8; 	//The lowest bit position storing the ID in CTRL_REG.
 
-parameter DATA0_BIT ;
-parameter DATA1_BIT ;					     
-parameter DATA_SIZE ;
+parameter DATA0_BIT = 10;
+parameter DATA1_BIT = 26;					     
+parameter DATA_SIZE = 16;
 
 parameter FIFO_IN_WIDTH  = ((2*DATA_SIZE) + ID_SIZE + OPERATION_SIZE);
   

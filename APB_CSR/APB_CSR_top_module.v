@@ -20,25 +20,25 @@ w_en_in
 
 //A top module including the control-status registers and their communication via APB or with the rest of the ALU design.   
    
-parameter REG_NUMBER;       //How many registers we have.
+parameter REG_NUMBER = 5;       //How many registers we have.
 
-parameter REG_CTRL;
-parameter REG_0;
-parameter REG_1;
-parameter REG_RES;
-parameter REG_STATUS;
+parameter REG_CTRL   = 0;
+parameter REG_0      = 1;
+parameter REG_1      = 2;
+parameter REG_RES    = 3;
+parameter REG_STATUS = 4;
 
-parameter OPERATION_BIT; 
-parameter OPERATION_SIZE; 
-parameter ID_SIZE;
-parameter ID_BIT;
+parameter OPERATION_BIT  = 1; 
+parameter OPERATION_SIZE = 2; 
+parameter ID_SIZE        = 8;
+parameter ID_BIT         = 8;
 
-parameter DATA_SIZE;
-parameter FIFO_OUT_WIDTH;
+parameter DATA_SIZE      = 16;
+parameter FIFO_OUT_WIDTH = 25;
 
-parameter FIFO_IN_WIDTH;
+parameter FIFO_IN_WIDTH  = 42;
 
-parameter APB_BUS_SIZE;
+parameter APB_BUS_SIZE   = 32;
 
 
 

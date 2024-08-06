@@ -16,8 +16,8 @@ start
 
 //The adder of the ALU as seen in the top module diagram. Apart from producing the result, this file includes the handshake generation.
 
-parameter DATA_SIZE;
-parameter ID_SIZE; 
+parameter DATA_SIZE = 16;
+parameter ID_SIZE = 8; 
 
 localparam ADD_COUNTER_SIZE = ($clog2(DATA_SIZE)+1);
 

@@ -18,14 +18,14 @@ fifo_out_status
 
 //The registers of the CSR unit. Any control signals are produced in csr_control.v
 
-parameter OPERATION_BIT; 
-parameter OPERATION_SIZE; 
-parameter ID_SIZE;
-parameter ID_BIT;
+parameter OPERATION_BIT   = 1; 
+parameter OPERATION_SIZE  = 2; 
+parameter ID_SIZE         = 8;
+parameter ID_BIT          = 8;
 
-parameter APB_BUS_SIZE;
-parameter DATA_SIZE;
-parameter FIFO_OUT_WIDTH;
+parameter APB_BUS_SIZE    = 32;
+parameter DATA_SIZE       = 16;
+parameter FIFO_OUT_WIDTH  = 25;
 parameter FIFO_IN_WIDTH = ((2*DATA_SIZE) + ID_SIZE + OPERATION_SIZE);
 
 

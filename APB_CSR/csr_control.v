@@ -23,18 +23,18 @@ rdata
 
 //Contol unit of the control_status registers. An APB slave is implemented and the en signals for the registers are produced.       
 
-parameter REG_NUMBER;       //How many registers we have.
+parameter REG_NUMBER      = 5;       //How many registers we have.
 
-parameter REG_CTRL;
-parameter REG_0;
-parameter REG_1;
-parameter REG_RES;
-parameter REG_STATUS;
+parameter REG_CTRL        = 0;
+parameter REG_0           = 1;
+parameter REG_1           = 2;
+parameter REG_RES         = 3;
+parameter REG_STATUS      = 4;
 
-parameter OPERATION_SIZE;
-parameter FIFO_OUT_WIDTH;
+parameter OPERATION_SIZE  = 2;
+parameter FIFO_OUT_WIDTH  = 25;
 
-parameter APB_BUS_SIZE;
+parameter APB_BUS_SIZE    = 32;
 
 //APB
 input                              clk;   
