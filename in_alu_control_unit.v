@@ -155,7 +155,7 @@ generate
 			r_en_in_gen = 1'b0;
 			data_reg_en = 1'b0;
 				case(state)
-					IDLE  : r_en_in = ((a_ready_data | m_ready_data) & !empty_in);
+					IDLE  : r_en_in_gen = ((a_ready_data | m_ready_data) & !empty_in);
 					CHECK : data_reg_en = 1'b1;
 					default: begin
 						r_en_in_gen = 1'b0;
