@@ -27,9 +27,9 @@ parameter OPERATION_SIZE = 2;   //(example: if bits 2 and 1 of ctrl_data are 01 
 parameter ID_SIZE        = 8;
 parameter ID_BIT         = 8; 	//The lowest bit position storing the ID in CTRL_REG.
 
-parameter DATA0_BIT = 10;
-parameter DATA1_BIT = 26;					     
-parameter DATA_SIZE = 16;
+parameter DATA0_BIT      = 10;
+parameter DATA1_BIT      = 26;					     
+parameter DATA_SIZE      = 16;
 
 parameter FIFO_IN_WIDTH  = ((2*DATA_SIZE) + ID_SIZE + OPERATION_SIZE);
   
@@ -61,7 +61,7 @@ output [((DATA_SIZE/2)-1):0] b_in;
 output [(ID_SIZE-1):0] 		 id_mul;
 
 //To FIFO_IN
-output /*reg*/ r_en_in;
+output r_en_in;
 
 
 
@@ -71,11 +71,12 @@ output /*reg*/ r_en_in;
 localparam READ_CIRCUIT = 0;
 
 generate 
-wire data_reg_en;
+
 	if(READ_CIRCUIT == 0)begin     //(posedge detector)  
+        wire data_reg_en;
+        wire r_en_in_gen;
 		wire r_en_in_temp;
-		wire r_en_in_dly;                   
-		
+		wire r_en_in_dly;  
 		
 		assign r_en_in_temp = ((a_ready_data | m_ready_data) & !empty_in);  //-> reads when there are data on queue -> fix it
 		
@@ -88,11 +89,14 @@ wire data_reg_en;
 						.q(r_en_in_dly));	
 						
 		assign data_reg_en = r_en_in_dly;						
-		assign r_en_in = (!r_en_in_dly & r_en_in_temp & !(a_valid_data | m_valid_data));
+		assign r_en_in_gen = (!r_en_in_dly & r_en_in_temp & !(a_valid_data | m_valid_data));
+
+        assign r_en_in = r_en_in_gen;
 	end
 	
-	else if(READ_CIRCUIT == 2)begin     //Circuit no2 (truth table) -> r_En_in laste 3 cycles
-	
+	else if(READ_CIRCUIT == 2)begin     //Circuit no2 (truth table) -> r_en_in lasts 3 cycles
+	    
+        wire r_en_in_gen;
 		wire r_en_temp;
 		wire r_en_1;
 		wire r_en_2;
@@ -112,11 +116,15 @@ wire data_reg_en;
 						.q(r_en_1));		 	
 		assign r_en_2 = ((a_ready_data | m_ready_data) & !(a_valid_data | m_valid_data));
 		
-		assign r_en_in = (r_en_1 | r_en_2);
+		assign r_en_in_gen = (r_en_1 | r_en_2);
+
+        assign r_en_in = r_en_in_gen;
 	end
 	
 	else if(READ_CIRCUIT == 3)begin          //FSM
-		
+
+		reg data_reg_en;
+        reg r_en_in_gen;
 		localparam IDLE = 0 ,CHECK = 2, MATCH = 3, WAIT = 4;
 		wire [2:0] state;
 		reg [2:0] next_state;
@@ -142,22 +150,25 @@ wire data_reg_en;
 		end
 		
 		//r_en_in 
-		reg data_reg_en;
-		
+			
 		always@(*)begin
-			r_en_in = 1'b0;
+			r_en_in_gen = 1'b0;
 			data_reg_en = 1'b0;
 				case(state)
 					IDLE  : r_en_in = ((a_ready_data | m_ready_data) & !empty_in);
 					CHECK : data_reg_en = 1'b1;
 					default: begin
-						r_en_in = 1'b0;
+						r_en_in_gen = 1'b0;
 						data_reg_en = 1'b0;
 					end
 				endcase
 		end
 	
+    assign r_en_in = r_en_in_gen;
+    
 	end
+
+
 
 endgenerate
 
