@@ -28,7 +28,7 @@ parameter MUL_DATA_SIZE = (DATA_SIZE/2);
 parameter OPERATION_BIT  = 0;        //16bit -> 0 
 parameter OPERATION_SIZE = 2; 		 //16bit -> 2 
 parameter ID_SIZE        = 8;		 //16bit -> 2 
-parameter ID_BIT         = 2; 		 //16bit -> 8 
+parameter ID_BIT         = 8; 		 //16bit -> 8 
 parameter DATA0_BIT      = 10;		 //16bit -> 10
 parameter DATA1_BIT      = 26;		 //16bit -> 26
 

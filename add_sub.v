@@ -21,7 +21,7 @@ output cout;
 wire [(DATA_SIZE-1):0] g; //generate function
 wire [(DATA_SIZE-1):0] p; //propagate function
 
-wire [(DATA_SIZE-1):0] c;
+wire [(DATA_SIZE):0] c;
 reg  [(DATA_SIZE-1):0] a2;
 
 
@@ -38,7 +38,7 @@ end
 //Carry-lookahead adder
 
 assign c[0] = cin;
-assign cout = c[(DATA_SIZE-1)];
+assign cout = c[DATA_SIZE];
 
 
 genvar i;
