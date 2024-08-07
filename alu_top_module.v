@@ -12,8 +12,8 @@ rdata
 );
 
 //CSR parameters
-parameter ADDRESS_SIZE   = ($clog2(REG_NUMBER));       
 parameter REG_NUMBER     = 4;       //How many registers we have.
+parameter ADDRESS_SIZE   = ($clog2(REG_NUMBER));       
 parameter REG_CTRL       = 0;
 parameter REG_0          = 1;
 parameter REG_1          = 2;
