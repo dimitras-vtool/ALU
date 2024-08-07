@@ -36,7 +36,7 @@ parameter ID_BIT         = 8;
 parameter DATA_SIZE      = 16;
 parameter FIFO_OUT_WIDTH = 25;
 
-parameter FIFO_IN_WIDTH  = 42;
+parameter FIFO_IN_WIDTH  = (DATA_SIZE + DATA_SIZE + ID_SIZE + OPERATION_SIZE);
 
 parameter APB_BUS_SIZE   = 32;
 

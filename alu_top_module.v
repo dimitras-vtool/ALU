@@ -12,7 +12,7 @@ rdata
 );
 
 //CSR parameters
-parameter REG_NUMBER     = 4;       //How many registers we have.
+parameter REG_NUMBER     = 5;       //How many registers we have.
 parameter ADDRESS_SIZE   = ($clog2(REG_NUMBER));       
 parameter REG_CTRL       = 0;
 parameter REG_0          = 1;
@@ -25,7 +25,7 @@ parameter APB_BUS_SIZE   = 32;
 parameter MUL_DATA_SIZE = (DATA_SIZE/2);
 
 //in alu control unit
-parameter OPERATION_BIT  = 0;        //16bit -> 0 
+parameter OPERATION_BIT  = 1;        //16bit -> 1 
 parameter OPERATION_SIZE = 2; 		 //16bit -> 2 
 parameter ID_SIZE        = 8;		 //16bit -> 2 
 parameter ID_BIT         = 8; 		 //16bit -> 8 
