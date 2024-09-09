@@ -68,111 +68,24 @@ output r_en_in;
 //r_en for reading from FIFO_IN and generating valid_f_data to the ALU					// r_en_in 
 //there can only be 1 read at a time -> single pulse
 
-localparam READ_CIRCUIT = 0;
+wire data_reg_en;
+wire r_en_in_gen;
+wire r_en_in_temp;
+wire r_en_in_dly;  
 
-generate 
-
-	if(READ_CIRCUIT == 0)begin     //(posedge detector)  
-        wire data_reg_en;
-        wire r_en_in_gen;
-		wire r_en_in_temp;
-		wire r_en_in_dly;  
+assign r_en_in_temp = ((a_ready_data | m_ready_data) & !empty_in);  //-> reads when there are data on queue -> fix it
 		
-		assign r_en_in_temp = ((a_ready_data | m_ready_data) & !empty_in);  //-> reads when there are data on queue -> fix it
-		
-		d_ff_async_en #(.SIZE(1),
-						.RESET_VALUE(1'b0))
-			r_en_in_reg(.clk(clk),
-						.rst(!rst_n ),
-						.en(1'b1),
-						.d(r_en_in_temp),
-						.q(r_en_in_dly));	
-						
-		assign data_reg_en = r_en_in_dly;						
-		assign r_en_in_gen = (!r_en_in_dly & r_en_in_temp & !(a_valid_data | m_valid_data));
+	d_ff_async_en #(.SIZE(1),
+					.RESET_VALUE(1'b0))
+		r_en_in_reg(.clk(clk),
+					.rst(!rst_n ),
+					.en(1'b1),
+					.d(r_en_in_temp),
+					.q(data_reg_en));	
+									
+assign r_en_in_gen = (!r_en_in_dly & r_en_in_temp & !(a_valid_data | m_valid_data));
 
-        assign r_en_in = r_en_in_gen;
-	end
-	
-	else if(READ_CIRCUIT == 2)begin     //Circuit no2 (truth table) -> r_en_in lasts 3 cycles
-	    
-        wire r_en_in_gen;
-		wire r_en_temp;
-		wire r_en_1;
-		wire r_en_2;
-		wire add_read;
-		wire mul_read;
-		
-		assign add_read = (a_ready_data & a_valid_data);
-		assign mul_read = (m_ready_data & m_valid_data);
-		assign r_en_temp = (add_read | mul_read);
-		
-		d_ff_async_en #(.SIZE(1),
-						.RESET_VALUE(1'b0))
-			r_en_in_reg(.clk(clk),
-						.rst(!rst_n ),
-						.en(1'b1),
-						.d(r_en_temp),
-						.q(r_en_1));		 	
-		assign r_en_2 = ((a_ready_data | m_ready_data) & !(a_valid_data | m_valid_data));
-		
-		assign r_en_in_gen = (r_en_1 | r_en_2);
-
-        assign r_en_in = r_en_in_gen;
-	end
-	
-	else if(READ_CIRCUIT == 3)begin          //FSM
-
-		reg data_reg_en;
-        reg r_en_in_gen;
-		localparam IDLE = 0 ,CHECK = 2, MATCH = 3, WAIT = 4;
-		wire [2:0] state;
-		reg [2:0] next_state;
-		d_ff_async_en #(.SIZE(3),
-					.RESET_VALUE(IDLE))
-			fsm_reg(.clk(clk),
-						.rst(!rst_n),
-						.en(1'b1),
-						.d(next_state),
-						.q(state));
-		
-		//state transition
-						
-		always@(*)begin
-			next_state = IDLE;
-				case(state) 
-					IDLE    : next_state = ((a_ready_data | m_ready_data) & !empty_in) ? CHECK : IDLE;
-					CHECK   : next_state = ((a_ready_data & a_valid_data) | (m_ready_data & m_valid_data)) ? MATCH : WAIT;
-					MATCH   : next_state = IDLE;
-					WAIT    : next_state = (a_ready_data & m_ready_data) ? CHECK : WAIT;
-					default : next_state = IDLE;
-				endcase
-		end
-		
-		//r_en_in 
-			
-		always@(*)begin
-			r_en_in_gen = 1'b0;
-			data_reg_en = 1'b0;
-				case(state)
-					IDLE  : r_en_in_gen = ((a_ready_data | m_ready_data) & !empty_in);
-					CHECK : data_reg_en = 1'b1;
-					default: begin
-						r_en_in_gen = 1'b0;
-						data_reg_en = 1'b0;
-					end
-				endcase
-		end
-	
-    assign r_en_in = r_en_in_gen;
-    
-	end
-
-
-
-endgenerate
-
-
+assign r_en_in = r_en_in_gen;
 
 
 
