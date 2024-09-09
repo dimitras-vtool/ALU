@@ -116,7 +116,7 @@ wire [(FIFO_OUT_WIDTH-1):0] fifo_out_data; //rdata of FIFO_OUT
 
 //CSR
 
-ABP_CSR_top_module#(.APB_BUS_SIZE(APB_BUS_SIZE),
+APB_CSR_top_module#(.APB_BUS_SIZE(APB_BUS_SIZE),
 					.DATA_SIZE(DATA_SIZE),
                     .REG_NUMBER(REG_NUMBER),   
                     .REG_CTRL(REG_CTRL),      

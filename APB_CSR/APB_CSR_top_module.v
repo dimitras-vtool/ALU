@@ -1,4 +1,4 @@
-module ABP_CSR_top_module (
+module APB_CSR_top_module (
 clk,
 rst_n,
 addr,

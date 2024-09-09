@@ -166,15 +166,27 @@ d_ff_async_en #(.SIZE(1),
 			 
 
 //enable signals for writing in registers
-wire en_ctrl;
-wire en_data0;
-wire en_data1;
 
-assign en_ctrl  = (sel & addr_0 & !slv_err_temp);
-assign en_data0 = (sel & addr_1 & !slv_err_temp);
-assign en_data1 = (sel & addr_2 & !slv_err_temp);
+//assign en_ctrl  = (sel & addr_0 & !slv_err_temp);
+//assign en_data0 = (sel & addr_1 & !slv_err_temp);
+//assign en_data1 = (sel & addr_2 & !slv_err_temp);
 
+posedge_detector 
+    en_ctrl_posedg_detect(.clk(clk),
+                         .rst_n(rst_n),
+                        .sig_to_detect(sel & addr_0 & !slv_err_temp),
+                        .positive_edge(en_ctrl));
 
+posedge_detector 
+    en_data0_posedg_detect(.clk(clk),
+                         .rst_n(rst_n),
+                        .sig_to_detect(sel & addr_1 & !slv_err_temp),
+                        .positive_edge(en_data0));
+posedge_detector 
+    en_data1_posedg_detect(.clk(clk),
+                         .rst_n(rst_n),
+                        .sig_to_detect(sel & addr_2 & !slv_err_temp),
+                        .positive_edge(en_data1));
 
 //r_en for FIFO_OUT and for writing in REG_RES
 
