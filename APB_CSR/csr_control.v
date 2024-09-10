@@ -136,28 +136,28 @@ end
 
 //errors
 wire write_err;
-assign write_err = ((addr_0 | addr_1 | addr_2) & !write & (sel == 1'b1));
+assign write_err = ((addr_3 | addr_4) & write & (en == 1'b1));
 
 wire read_err;
-assign read_err = (addr_3 & write);
+assign read_err = ((addr_1 | addr_2 | addr_3) & !write & (en == 1'b1));
 
 wire addr_err;
-assign addr_err = (addr >= REG_NUMBER);
+assign addr_err = (addr >= REG_NUMBER & (en == 1'b1));
 
 wire empty_err;
-assign empty_err = (empty_out & addr_3 & !write);
+assign empty_err = (empty_out & addr_3 & !write & (en == 1'b1));
 
 wire full_err;
-assign full_err = (full_in & (addr_0 | addr_1 | addr_2) & write);
+assign full_err = (full_in & (addr_0 | addr_1 | addr_2) & write & (en == 1'b1));
 
 wire op_err;
-assign op_err = (!(ctrl_op == 2'b01 | ctrl_op == 2'b10) & write & (addr == REG_CTRL));
+assign op_err = (!(ctrl_op == 2'b01 | ctrl_op == 2'b10) & write & (addr == REG_CTRL) & (en == 1'b1));
 
           
 //slv_err
-assign slv_err_temp = (write_err | read_err | addr_err | full_err | empty_err | op_err);
+assign slv_err = (write_err | read_err | addr_err | full_err | empty_err | op_err);
 
-
+/*
 d_ff_async_en #(.SIZE(1),
 		     .RESET_VALUE(0))
 	 err_reg(.clk(clk),
@@ -166,7 +166,7 @@ d_ff_async_en #(.SIZE(1),
 	         .d(slv_err_temp),      
              .q(slv_err));
 			 
-			 
+	*/		 
 
 //enable signals for writing in registers
 
@@ -176,24 +176,24 @@ d_ff_async_en #(.SIZE(1),
 
 posedge_detector 
     en_ctrl_posedg_detect(.clk(clk),
-                         .rst_n(rst_n),
-                        .sig_to_detect(sel & addr_0 & !slv_err_temp),
-                        .positive_edge(en_ctrl));
+                          .rst_n(rst_n),
+                          .sig_to_detect(addr_0 & !slv_err & en),
+                          .positive_edge(en_ctrl));
 
 posedge_detector 
     en_data0_posedg_detect(.clk(clk),
-                         .rst_n(rst_n),
-                        .sig_to_detect(sel & addr_1 & !slv_err_temp),
-                        .positive_edge(en_data0));
+                           .rst_n(rst_n),
+                           .sig_to_detect(addr_1 & !slv_err & en),
+                           .positive_edge(en_data0));
 posedge_detector 
     en_data1_posedg_detect(.clk(clk),
-                         .rst_n(rst_n),
-                        .sig_to_detect(sel & addr_2 & !slv_err_temp),
-                        .positive_edge(en_data1));
+                           .rst_n(rst_n),
+                           .sig_to_detect(addr_2 & !slv_err & en),
+                           .positive_edge(en_data1));
 
 //r_en for FIFO_OUT and for writing in REG_RES
 
-assign r_en_out = ((addr_3 | addr_4) & !slv_err_temp & sel & !write);  //also rst for reg_res
+assign r_en_out = ((addr_3 | addr_4) & !slv_err & sel & !write);  //also rst for reg_res
 
 
 
@@ -204,14 +204,14 @@ d_ff_async_en #(.SIZE(1),
     w_en_in_reg(.clk(clk),
              .rst(!rst_n),
 			 .en(1'b1),
-             .d(write & !slv_err & (start_bit == 1)),
+             .d(!full_in & (start_bit == 1)),
              .q(w_en_in));
 
 		 
 //MUX for rdata
 
 wire [4:0] mux_sel;
-assign mux_sel = {sel, write, addr_3, addr_4, slv_err_temp};
+assign mux_sel = {sel, write, addr_3, addr_4, slv_err};
 
 always@(*)begin
 	case(mux_sel)
