@@ -103,12 +103,11 @@ reg en_reg_id_m; //for id_reg
 
 //Register holding multiplicant               (Reg_A)
 //(loaded only once, along with reg B, 
-//in the beggining of the mul opperation)   
-reg reg_a_nrst;                                          
+//in the beggining of the mul opperation)                                             
          d_ff_async_en #(.SIZE(MUL_DATA_SIZE),
                          .RESET_VALUE({MUL_DATA_SIZE{1'b0}}))
              load_a_reg(.clk(clk),
-                        .rst(!rst_n & reg_a_nrst),
+                        .rst(!rst_n | done),
                         .en(en_regA),
                         .d(a_in),
                         .q(mul_c));
@@ -117,11 +116,10 @@ reg reg_a_nrst;
 
 //Shift register for multiplier                (Reg_B)
 //(loaded in the begging of the operation,
-//right-shifted every cycle (shift-input => reg_C[lsb]))  
-reg multiplier_shift_nrst;     
+//right-shifted every cycle (shift-input => reg_C[lsb]))       
         right_shift_register #(.DATA_SIZE(MUL_DATA_SIZE))
              shift_reg_B(.clk(clk),
-                         .rst_n(rst_n & multiplier_shift_nrst),
+                         .rst_n(rst_n & !done),
                          .en(en_regB),
                          .shift_load(shift_load_mul_r_regB),
                          .d(b_in),
@@ -130,13 +128,11 @@ reg multiplier_shift_nrst;
 
 
 wire carry_out_reg;
-reg carry_out_nrst;     
-
 //Shift register for addition                  (Reg_C)
 //(multiplicant + 0 or mul_c) result
            right_shift_register #(.DATA_SIZE(MUL_DATA_SIZE))
              shift_reg_C(.clk(clk),
-                         .rst_n(rst_n & carry_out_nrst),
+                         .rst_n(rst_n & !done),
                          .en(en_regC),
                          .shift_load(shift_load_mul_c_regC),
                          .d(adder_out),
@@ -237,18 +233,12 @@ always@(*)begin
 	  m_ready_data = 1'b0;
 	  m_valid_res = 1'b0;
 	  en_reg_id_m   = 1'b0;
-	  carry_out_nrst = 1'b1;     
-	  multiplier_shift_nrst = 1'b1;
-	  reg_a_nrst = 1'b1;
     case(state)
         IDLE: begin
 			  m_ready_data = (ready_f_res);
               en_regA = (start);
               en_regB = (start);
 			  en_reg_id_m = (start);
-			  carry_out_nrst = (start);    
-			  multiplier_shift_nrst = (start);
-			  reg_a_nrst = (start);
               end
         TEST: begin
               en_regC = 1'b1;
