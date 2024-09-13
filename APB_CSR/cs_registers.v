@@ -116,9 +116,9 @@ d_ff_async_en #(.SIZE(1),
 
 //Register DATA_0
 
-wire [(APB_BUS_SIZE-1):0] data_0_out;
+wire [(DATA_SIZE-1):0] data_0_out;
 
-d_ff_async_en #(.SIZE(APB_BUS_SIZE),
+d_ff_async_en #(.SIZE(DATA_SIZE),
              .RESET_VALUE(0))
     data0_reg(.clk(clk),
               .rst(!rst_n),
@@ -131,9 +131,9 @@ d_ff_async_en #(.SIZE(APB_BUS_SIZE),
 
 //Register DATA_1
 
-wire [(APB_BUS_SIZE-1):0] data_1_out;
+wire [(DATA_SIZE-1):0] data_1_out;
 
-d_ff_async_en #(.SIZE(APB_BUS_SIZE),
+d_ff_async_en #(.SIZE(DATA_SIZE),
              .RESET_VALUE(0))
     data1_reg(.clk(clk),
               .rst(!rst_n),
@@ -145,7 +145,7 @@ d_ff_async_en #(.SIZE(APB_BUS_SIZE),
 
 //Output data to FIFO_IN
 
-assign csr_data = {data_1_out, data_0_out, id_out, op_out};
+assign csr_data = {data_1_out, data_0_out, id_out,op_out};
 
 
 

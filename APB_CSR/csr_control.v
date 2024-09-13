@@ -101,7 +101,7 @@ d_ff_async_en #(.SIZE(1),
 	 d_ready_no_wait(.clk(clk),
 	          .rst(!rst_n),
 	          .en(sel),
-	          .d(!write),        //There are no wait states
+	          .d(!en),        //There are no wait states
               .q(ready_no_wait));
 
 
@@ -121,14 +121,11 @@ d_ff_async_en #(.SIZE(1),
 
 //Mux for ready (with a wait state for reading from FIFO_OUT)
 
-wire [4:0] ready_mux_sel;
-assign ready_mux_sel = {sel,write,slv_err, addr_3, addr_4};
-
 always@(*)begin
-	case(ready_mux_sel)
-		5'b11000: ready = ready_no_wait;
-		5'b10010: ready = ready_wait;
-		5'b10001: ready = ready_no_wait;
+	case({sel,en,write,slv_err, addr_3, addr_4})
+		6'b111000: ready = ready_no_wait;
+		6'b110010: ready = ready_wait;
+		6'b110001: ready = ready_no_wait;
 		default: ready = 1'b0;
 	endcase
 end
