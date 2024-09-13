@@ -59,7 +59,7 @@ input							   full_in;
 input 							   empty_out;
 
 //APB
-output                             slv_err;
+output reg                         slv_err;
 output reg                         ready;
 
 //CS Registers
@@ -121,11 +121,14 @@ d_ff_async_en #(.SIZE(1),
 
 //Mux for ready (with a wait state for reading from FIFO_OUT)
 
+wire [5:0] ready_mux_sel = {sel,en,write, addr_3, addr_4};
+
 always@(*)begin
-	case({sel,en,write,slv_err, addr_3, addr_4})
-		6'b111000: ready = ready_no_wait;
-		6'b110010: ready = ready_wait;
-		6'b110001: ready = ready_no_wait;
+	case(ready_mux_sel)
+		6'b11100: ready = ready_no_wait;
+		6'b11010: ready = ready_wait;
+        6'b11001: ready = ready_wait;
+		6'b11001: ready = ready_no_wait;
 		default: ready = 1'b0;
 	endcase
 end
@@ -133,16 +136,16 @@ end
 
 //errors
 wire write_err;
-assign write_err = ((addr_0 | addr_1 | addr_2) & !write & (sel == 1'b1));
+assign write_err = ((addr_0 | addr_1 | addr_2) & !write);
 
 wire read_err;
-assign read_err = (addr_3 & write);
+assign read_err = ((addr_3 | addr_4) & write);
 
 wire addr_err;
-assign addr_err = (addr >= REG_NUMBER);
+assign addr_err = (addr >= REG_NUMBER );
 
 wire empty_err;
-assign empty_err = (empty_out & addr_3 & !write);
+assign empty_err = (empty_out & addr_3 & !write  & !en);
 
 wire full_err;
 assign full_err = (full_in & (addr_0 | addr_1 | addr_2) & write);
@@ -152,18 +155,40 @@ assign op_err = (!(ctrl_op == 2'b01 | ctrl_op == 2'b10) & write & (addr == REG_C
 
           
 //slv_err
-assign slv_err_temp = (write_err | read_err | addr_err | full_err | empty_err | op_err);
+assign slv_err_temp = ((write_err | read_err | addr_err | full_err | empty_err | op_err) & sel);
+
+wire slv_err_no_wait;
+wire slv_err_wait;
+
+d_ff_async_en #(.SIZE(1),
+		     .RESET_VALUE(0))
+	 err_1_reg(.clk(clk),
+	         .rst(!rst_n),
+			 .en(sel),
+	         .d(slv_err_temp),      
+             .q(slv_err_no_wait));
 
 
 d_ff_async_en #(.SIZE(1),
 		     .RESET_VALUE(0))
-	 err_reg(.clk(clk),
+	 err_2_reg(.clk(clk),
 	         .rst(!rst_n),
 			 .en(sel),
-	         .d(slv_err_temp),      
-             .q(slv_err));
+	         .d(slv_err_no_wait),      
+             .q(slv_err_wait));
+
 			 
-			 
+wire [2:0] slv_err_sel;
+assign slv_err_sel = {sel,en,write};
+
+always@(*)begin
+    case(slv_err_sel)
+		3'b111: slv_err = slv_err_no_wait;
+		3'b110: slv_err = slv_err_wait;
+		default: slv_err = 1'b0;
+	endcase
+end
+		 
 
 //enable signals for writing in registers
 
@@ -190,7 +215,7 @@ posedge_detector
 
 //r_en for FIFO_OUT and for writing in REG_RES
 
-assign r_en_out = ((addr_3 | addr_4) & !slv_err_temp & sel & !write);  //also rst for reg_res
+assign r_en_out = ((addr_3 | addr_4) & !slv_err_temp & sel & !write );  //also rst for reg_res
 
 
 
@@ -207,13 +232,13 @@ d_ff_async_en #(.SIZE(1),
 		 
 //MUX for rdata
 
-wire [4:0] mux_sel;
-assign mux_sel = {sel, write, addr_3, addr_4, slv_err_temp};
+wire [5:0] mux_sel;
+assign mux_sel = {sel, en, write, addr_3, addr_4, slv_err};
 
 always@(*)begin
 	case(mux_sel)
-		5'b10100 : rdata = final_result;
-		5'b10010 : rdata = fifo_out_status;
+		6'b110100 : rdata = final_result;
+		6'b110010 : rdata = fifo_out_status;
 	default: rdata = {FIFO_OUT_WIDTH{1'b0}};
 	endcase
 end

@@ -116,9 +116,9 @@ d_ff_async_en #(.SIZE(1),
 
 //Register DATA_0
 
-wire [(DATA_SIZE-1):0] data_0_out;
+wire [(APB_BUS_SIZE-1):0] data_0_out;
 
-d_ff_async_en #(.SIZE(DATA_SIZE),
+d_ff_async_en #(.SIZE(APB_BUS_SIZE),
              .RESET_VALUE(0))
     data0_reg(.clk(clk),
               .rst(!rst_n),
@@ -131,9 +131,9 @@ d_ff_async_en #(.SIZE(DATA_SIZE),
 
 //Register DATA_1
 
-wire [(DATA_SIZE-1):0] data_1_out;
+wire [(APB_BUS_SIZE-1):0] data_1_out;
 
-d_ff_async_en #(.SIZE(DATA_SIZE),
+d_ff_async_en #(.SIZE(APB_BUS_SIZE),
              .RESET_VALUE(0))
     data1_reg(.clk(clk),
               .rst(!rst_n),
