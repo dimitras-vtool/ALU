@@ -99,9 +99,9 @@ wire ready_no_wait;
 d_ff_async_en #(.SIZE(1),
 		        .RESET_VALUE(0))
 	 d_ready_no_wait(.clk(clk),
-	          .rst(!rst_n | !sel),
-	          .en(1'b1),
-	          .d(1'b1),        //There are no wait states
+	          .rst(!rst_n),
+	          .en(sel),
+	          .d(!write),        //There are no wait states
               .q(ready_no_wait));
 
 
@@ -112,7 +112,7 @@ wire ready_wait;
 d_ff_async_en #(.SIZE(1),
 		     .RESET_VALUE(0))
 	 d_ready_wait(.clk(clk),
-	          .rst(!rst_n | !sel),
+	          .rst(!rst_n),
 			  .en(1'b1),
 	          .d(ready_no_wait),        //There are no wait states
               .q(ready_wait));
