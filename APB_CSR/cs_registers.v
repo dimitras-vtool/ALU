@@ -56,7 +56,7 @@ output 	[(FIFO_IN_WIDTH-1):0]     csr_data;
 	
 
 //to csr_control
-output start_bit;
+output                            start_bit;
 
 
 output [(FIFO_OUT_WIDTH-1):0]	  final_result;
@@ -90,7 +90,7 @@ d_ff_async_en #(.SIZE(OPERATION_SIZE),
 
 //start bit register 
 	
-wire clear_start;
+/*wire clear_start;
 		 
 d_ff_async_en #(.SIZE(1),
              .RESET_VALUE(0))
@@ -98,9 +98,14 @@ d_ff_async_en #(.SIZE(1),
 				  .rst(!rst_n | clear_start),
 				  .en(en_ctrl),
 				  .d(wdata[0]),
-				  .q(start_bit));
+				  .q(start_bit));   */
               
-   
+
+posedge_detector
+    start_bit_posedge(.clk(clk),
+                      .rst_n(rst_n),
+                      .sig_to_detect(wdata[0]),
+                      .positive_edge(start_bit));  
 
 //for self-clearing the start bit
 
