@@ -100,12 +100,23 @@ d_ff_async_en #(.SIZE(1),
 				  .d(wdata[0]),
 				  .q(start_bit));   */
               
+wire start_bit_pos;
 
+d_ff_async_en #(.SIZE(1),
+             .RESET_VALUE(0))
+    start_reg(.clk(clk),
+				  .rst(!rst_n),
+				  .en(1'b1),
+				  .d((en_ctrl & wdata[0])),
+				  .q(start_bit_pos)); 
+ 
 posedge_detector
     start_bit_posedge(.clk(clk),
                       .rst_n(rst_n),
-                      .sig_to_detect(wdata[0]),
-                      .positive_edge(start_bit));  
+                      .sig_to_detect(start_bit_pos),
+                      .en(en_ctrl),
+                      .positive_edge(start_bit)); 
+
 
 //for self-clearing the start bit
 
