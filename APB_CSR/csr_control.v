@@ -59,7 +59,7 @@ input							   full_in;
 input 							   empty_out;
 
 //APB
-output reg                         slv_err;
+output                             slv_err;
 output reg                         ready;
 
 //CS Registers
@@ -121,14 +121,14 @@ d_ff_async_en #(.SIZE(1),
 
 //Mux for ready (with a wait state for reading from FIFO_OUT)
 
-wire [5:0] ready_mux_sel = {sel,en,write, addr_3, addr_4};
+wire [4:0] ready_mux_sel = {sel,en,write, addr_3, addr_4};
 
 always@(*)begin
-	case(ready_mux_sel)
-		6'b11100: ready = ready_no_wait;
-		6'b11010: ready = ready_wait;
-        6'b11001: ready = ready_wait;
-		6'b11001: ready = ready_no_wait;
+	casez(ready_mux_sel)
+		5'b111??: ready = ready_no_wait;  //would result in slv_err or a write operation, either way there is no wait state.
+        5'b11000: ready = ready_no_wait;  //would result in slv_err cause the master is trying to read from the first three registers.
+		5'b11010: ready = ready_wait;
+        5'b11001: ready = ready_wait;
 		default: ready = 1'b0;
 	endcase
 end
@@ -163,12 +163,12 @@ wire slv_err_wait;
 d_ff_async_en #(.SIZE(1),
 		     .RESET_VALUE(0))
 	 err_1_reg(.clk(clk),
-	         .rst(!rst_n),
-			 .en(sel),
+	         .rst(!rst_n |!sel),
+			 .en(1'b1),
 	         .d(slv_err_temp),      
-             .q(slv_err_no_wait));
+             .q(slv_err));
 
-
+/*
 d_ff_async_en #(.SIZE(1),
 		     .RESET_VALUE(0))
 	 err_2_reg(.clk(clk),
@@ -178,17 +178,19 @@ d_ff_async_en #(.SIZE(1),
              .q(slv_err_wait));
 
 			 
-wire [2:0] slv_err_sel;
-assign slv_err_sel = {sel,en,write};
+wire [4:0] slv_err_sel;
+assign slv_err_sel = {sel,en,write,addr_3,addr_4};
 
 always@(*)begin
     case(slv_err_sel)
-		3'b111: slv_err = slv_err_no_wait;
-		3'b110: slv_err = slv_err_wait;
+		5'b11100: slv_err = slv_err_no_wait;
+        5'b11000: slv_err = slv_err_no_wait;
+		5'b11001: slv_err = slv_err_wait;
+		5'b11010: slv_err = slv_err_wait;
 		default: slv_err = 1'b0;
 	endcase
 end
-		 
+	*/	 
 
 //enable signals for writing in registers
 
