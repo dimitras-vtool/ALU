@@ -161,7 +161,7 @@ d_ff_async_en #(.SIZE(APB_BUS_SIZE),
 
 //Output data to FIFO_IN
 
-assign csr_data = {data_1_out, data_0_out, id_out,op_out};
+assign csr_data = {data_1_out[0+:DATA_SIZE], data_0_out[0+:DATA_SIZE], id_out,op_out};
 
 
 
