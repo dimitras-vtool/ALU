@@ -121,14 +121,16 @@ d_ff_async_en #(.SIZE(1),
 
 //Mux for ready (with a wait state for reading from FIFO_OUT)
 
-wire [4:0] ready_mux_sel = {sel,en,write, addr_3, addr_4};
+wire [5:0] ready_mux_sel = {sel,en,write, addr_3, addr_4, slv_err};
 
 always@(*)begin
 	casez(ready_mux_sel)
-		5'b111??: ready = ready_no_wait;  //would result in slv_err or a write operation, either way there is no wait state.
-        5'b11000: ready = ready_no_wait;  //would result in slv_err cause the master is trying to read from the first three registers.
-		5'b11010: ready = ready_wait;
-        5'b11001: ready = ready_wait;
+		6'b111???: ready = ready_no_wait;  //would result in slv_err or a write operation, either way there is no wait state.
+        6'b110001: ready = ready_no_wait;  //would result in slv_err cause the master is trying to read from the first three registers.
+		6'b110100: ready = ready_wait;
+        6'b110010: ready = ready_wait;
+        6'b110101: ready = ready_no_wait;  //read from the correct registers (RO) but there is slv_err
+        6'b110011: ready = ready_no_wait;
 		default: ready = 1'b0;
 	endcase
 end
