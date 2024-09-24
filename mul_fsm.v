@@ -308,7 +308,7 @@ assign result =  {reg_c_out,multiplier_shift};
 
 //fifo_out result 
 
-assign result_mul = {id_mul_out, carry_out_reg ,result};
+assign result_mul = {id_mul_out, 1'b0 ,result};
 
 
 endmodule
