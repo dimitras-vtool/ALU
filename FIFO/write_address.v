@@ -24,7 +24,7 @@ output cw_max;
 wire [(FIFO_ADDRESS_SIZE):0] count_w_in;
 
 
-assign cw_max = (w_ptr == (MEMORY_DEPTH -1));   //for restarting the counter when it reaches the maximum value (the depth of the memory)
+assign cw_max = (w_ptr == MEMORY_DEPTH);   //for restarting the counter when it reaches the maximum value (the depth of the memory)
 
 
 d_ff_async_en  #(.SIZE(FIFO_ADDRESS_SIZE+1))

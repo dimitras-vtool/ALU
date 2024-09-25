@@ -19,7 +19,7 @@ output reg [(SIZE-1):0] q;
 always@(posedge clk, posedge rst) begin
 	if(rst) 
 		q <= RESET_VALUE;
-	else if(en)
+	else if(!rst & en)
 		q <= d;
 end
 
