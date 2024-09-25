@@ -222,7 +222,7 @@ posedge_detector
 
 //r_en for FIFO_OUT and for writing in REG_RES
 
-assign r_en_out = ((addr_3 | addr_4) & !slv_err_temp & sel & !write );  //also rst for reg_res
+assign r_en_out = ((addr_3 | addr_4) & !slv_err_temp & sel & !write & !en);  //also rst for reg_res
 
 
 

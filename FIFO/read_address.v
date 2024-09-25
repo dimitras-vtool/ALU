@@ -7,7 +7,7 @@ r_ptr);
 //This file generates the pointer for reading from the FIFO
 
 parameter MEMORY_DEPTH = 4;
-parameter FIFO_ADDRESS_SIZE = 3;
+parameter FIFO_ADDRESS_SIZE = ($clog2(MEMORY_DEPTH));
 
 input clk;
 input rst_n;

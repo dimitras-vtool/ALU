@@ -14,7 +14,7 @@ rdata);
 parameter MEMORY_WIDTH = 4;
 parameter MEMORY_DEPTH = 4;
 
-parameter FIFO_ADDRESS_SIZE = 2;
+parameter FIFO_ADDRESS_SIZE = ($clog2(MEMORY_DEPTH));
 
 parameter MEM_IP = 0;
 

@@ -8,7 +8,7 @@ cw_max);
 //This file generates the pointer for writing in the FIFO
 
 parameter MEMORY_DEPTH = 4;
-parameter FIFO_ADDRESS_SIZE = 2;
+parameter FIFO_ADDRESS_SIZE = ($clog2(MEMORY_DEPTH));
 
 input clk;
 input rst_n;
