@@ -242,11 +242,21 @@ d_ff_async_en #(.SIZE(1),
 wire [5:0] mux_sel;
 assign mux_sel = {sel, en, write, addr_3, addr_4, slv_err};
 
+wire [(FIFO_OUT_WIDTH-1):0] r_data_last;
+
+d_ff_async_en #(.SIZE(FIFO_OUT_WIDTH),
+             .RESET_VALUE(0))
+    r_data_reg(.clk(clk),
+             .rst(!rst_n),
+	     .en(1'b1),
+             .d(rdata),
+             .q(r_data_last));
+
 always@(*)begin
 	case(mux_sel)
 		6'b110100 : rdata = final_result;
 		6'b110010 : rdata = fifo_out_status;
-	default: rdata = {FIFO_OUT_WIDTH{1'b0}};
+	default: rdata = r_data_last;
 	endcase
 end
 

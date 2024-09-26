@@ -171,7 +171,7 @@ assign csr_data = {data_1_out[0+:DATA_SIZE], data_0_out[0+:DATA_SIZE], id_out,op
 d_ff_async_en #(.SIZE(FIFO_OUT_WIDTH),
              .RESET_VALUE(0))
     res_reg(.clk(clk),
-            .rst(!rst_n | !r_en_out),
+            .rst(!rst_n),
 			.en(1'b1),
             .d(fifo_out_data),
             .q(final_result));
