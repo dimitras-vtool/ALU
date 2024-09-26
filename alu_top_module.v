@@ -155,7 +155,7 @@ APB_CSR_top_module#(.APB_BUS_SIZE(APB_BUS_SIZE),
 fifo_synch #(.MEM_IP(MEM_IP),
 			 .MEMORY_WIDTH(FIFO_IN_WIDTH),
              .MEMORY_DEPTH(FIFO_IN_DEPTH), 
-             .FIFO_ADDRESS_SIZE($clog2(REG_NUMBER)))    
+             .FIFO_ADDRESS_SIZE($clog2(FIFO_IN_DEPTH)))    
 	fifo_in(.clk(clk),
 			.rst_n(rst_n),
 			.w_en(w_en_in),
@@ -262,7 +262,7 @@ out_alu_control_unit#(.FIFO_OUT_WIDTH(FIFO_OUT_WIDTH),
 fifo_synch #(.MEM_IP(MEM_IP),
 			 .MEMORY_WIDTH(FIFO_OUT_WIDTH),
              .MEMORY_DEPTH(FIFO_OUT_DEPTH), 
-             .FIFO_ADDRESS_SIZE(ADDRESS_SIZE))    
+             .FIFO_ADDRESS_SIZE($clog2(FIFO_IN_DEPTH)))    
 	fifo_out(.clk(clk),
 			.rst_n(rst_n),
 			.w_en(w_en_out),
