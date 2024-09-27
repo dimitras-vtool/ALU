@@ -128,7 +128,7 @@ always@(*)begin
 		6'b111???: ready = ready_no_wait;  //would result in slv_err or a write operation, either way there is no wait state.
         6'b110001: ready = ready_no_wait;  //would result in slv_err cause the master is trying to read from the first three registers.
 		6'b110100: ready = ready_wait;
-        6'b110010: ready = ready_wait;
+        6'b110010: ready = ready_no_wait;
         6'b110101: ready = ready_no_wait;  //read from the correct registers (RO) but there is slv_err
         6'b110011: ready = ready_no_wait;
 		default: ready = 1'b0;
@@ -222,7 +222,7 @@ posedge_detector
 
 //r_en for FIFO_OUT and for writing in REG_RES
 
-assign r_en_out = ((addr_3 | addr_4) & !slv_err_temp & sel & !write & !en);  //also rst for reg_res
+assign r_en_out = (addr_3 & !slv_err_temp & sel & !write & !en);  //also rst for reg_res
 
 
 
