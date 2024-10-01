@@ -1,4 +1,4 @@
-# A 16-bit ALU with APB interface
+# 16-bit Arithmetic Logic Unit with APB-Controlled Registers
 
 ## Introduction
 This design is an implementation of a 16-bit Arithmetic Logic Unit (ALU). 
@@ -8,6 +8,7 @@ The ALU can perform addition and multiplication.
 
 It was developed as part of the VTOOL digital design training program and later on verified.
 
-## Documentation:
+## Documentation
+Specification of the design:
 https://docs.google.com/document/d/1tTjfOoyMRnSe7l0HUintp4mNvYAe0kjM8HKxl56VGvU/edit
 
