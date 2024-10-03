@@ -169,7 +169,7 @@ always@(*)begin
 			 end
 			 
         SUM: begin
-			 a_valid_res = (!sum_written);
+			 a_valid_res = 1'b1;
 			 a_ready_data = 1'b0;
 			 end
 		

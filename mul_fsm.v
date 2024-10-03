@@ -119,7 +119,7 @@ reg en_reg_id_m; //for id_reg
 //right-shifted every cycle (shift-input => reg_C[lsb]))       
         right_shift_register #(.DATA_SIZE(MUL_DATA_SIZE))
              shift_reg_B(.clk(clk),
-                         .rst_n(rst_n & !done),
+                         .rst_n(rst_n & !m_valid_data),
                          .en(en_regB),
                          .shift_load(shift_load_mul_r_regB),
                          .d(b_in),
@@ -132,7 +132,7 @@ wire carry_out_reg;
 //(multiplicant + 0 or mul_c) result
            right_shift_register #(.DATA_SIZE(MUL_DATA_SIZE))
              shift_reg_C(.clk(clk),
-                         .rst_n(rst_n & !done),
+                         .rst_n(rst_n & !m_valid_data),
                          .en(en_regC),
                          .shift_load(shift_load_mul_c_regC),
                          .d(adder_out),
@@ -258,8 +258,8 @@ always@(*)begin
 
         SHIFT: begin
                done_temp     = (stop);
-			   m_valid_res   = (stop & !mul_written);
                end
+	SAVE: m_valid_res   = 1'b1;
 		
         default: begin
 			     counter_en  = 1'b0;

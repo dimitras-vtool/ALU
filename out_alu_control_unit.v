@@ -53,8 +53,16 @@ output mul_written;
 
 //w_en_out for FIFO_OUT
 
-assign w_en_out = ((a_valid_res | m_valid_res) & ready_f_res);
+wire w_en_out_temp;
+assign w_en_out_temp = ((a_valid_res | m_valid_res) & ready_f_res);
 
+posedge_detector 
+	w_en_out_posedge(
+			  .clk(clk),
+			  .rst_n(rst_n),
+			.sig_to_detect(w_en_out_temp),
+			.en(1'b1),
+			.positive_edge(w_en_out));
 
 
 //signals that alert ALU that the results have been written (so that valid_f_res signals fall)

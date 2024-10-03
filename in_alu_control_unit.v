@@ -70,22 +70,20 @@ output r_en_in;
 
 wire data_reg_en;
 wire r_en_in_gen;
-wire r_en_in_temp;
+wire data_reg_en_temp;
 wire r_en_in_dly;  
 
-assign r_en_in_temp = ((a_ready_data | m_ready_data) & !empty_in);  //-> reads when there are data on queue -> fix it
+assign data_reg_en_temp = ((a_ready_data | m_ready_data) & !empty_in);  //-> reads when there are data on queue -> fix it
 		
 	d_ff_async_en #(.SIZE(1),
 					.RESET_VALUE(1'b0))
 		r_en_in_reg(.clk(clk),
 					.rst(!rst_n ),
 					.en(1'b1),
-					.d(r_en_in_temp),
+					.d(data_reg_en_temp),
 					.q(data_reg_en));	
 									
-assign r_en_in_gen = (!r_en_in_dly & r_en_in_temp & !(a_valid_data | m_valid_data));
-
-assign r_en_in = r_en_in_gen;
+assign r_en_in = ((a_ready_data | m_ready_data) & !(a_valid_data | m_valid_data) & !empty_in & !r_en_in_dly);
 
 
 
