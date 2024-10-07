@@ -161,7 +161,7 @@ always@(*)begin
               en_reg_1     = (start_temp);
               en_reg_2     = (start_temp);
 			  en_reg_id_a  = (start_temp);
-			  a_ready_data = (!start & ready_f_res);
+			  a_ready_data = (ready_f_res);
               end
        
         ADD: begin

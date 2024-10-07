@@ -71,7 +71,10 @@ output r_en_in;
 wire data_reg_en;
 wire r_en_in_gen;
 wire data_reg_en_temp;
-wire r_en_in_dly;  
+wire r_en_in_dly;
+
+wire addition;
+wire multiplication;  
 
 assign data_reg_en_temp = ((a_ready_data | m_ready_data) & !empty_in);  //-> reads when there are data on queue -> fix it
 		
@@ -83,8 +86,7 @@ assign data_reg_en_temp = ((a_ready_data | m_ready_data) & !empty_in);  //-> rea
 					.d(data_reg_en_temp),
 					.q(data_reg_en));	
 									
-assign r_en_in = ((a_ready_data | m_ready_data) & !(a_valid_data | m_valid_data) & !empty_in & !r_en_in_dly);
-
+assign r_en_in = ((a_ready_data | m_ready_data) & !(a_valid_data | m_valid_data) & !empty_in & !r_en_in_dly & !(addition | multiplication));
 
 
 //registers between FIFO_IN and ALU 
@@ -125,7 +127,7 @@ d_ff_async_en #(.SIZE(ID_SIZE),													//id reg
 //op registers
 			  
 wire op_bit_add;
-wire addition;
+
 assign op_bit_add = ((fifo_data[(OPERATION_BIT-1) +: OPERATION_SIZE] == 2'b01));
 
 
@@ -138,18 +140,17 @@ d_ff_async_en #(.SIZE(1),
               .q(r_en_in_dly));
 	
 
-
 d_ff_async_en #(.SIZE(1),
                 .RESET_VALUE(0))
     op_add_reg(.clk(clk),
               .rst(!rst_n | op_start),																//op_add reg
-			  .en(r_en_in_dly),
+	      .en(r_en_in_dly),
               .d(op_bit_add),
               .q(addition));
 	
 	
 wire op_bit_mul;
-wire multiplication;
+
 assign op_bit_mul = ((fifo_data[(OPERATION_BIT-1) +: OPERATION_SIZE] == 2'b10));
 
 d_ff_async_en #(.SIZE(1),																			//op_mul reg
@@ -167,37 +168,32 @@ d_ff_async_en #(.SIZE(1),																			//op_mul reg
 //add
 
 wire a_valid;
-wire a_valid_dly;
-assign a_valid = (addition /*& a_ready_data*/);										//(posedge detector)
+
+assign a_valid = (addition /*& a_ready_data*/);										
 
 d_ff_async_en #(.SIZE(1),
                 .RESET_VALUE(1'b0))
       a_valid_data_reg(.clk(clk),
                  .rst(!rst_n),
-				 .en(a_ready_data),
-                 .d(a_valid),
-                 .q(a_valid_dly));
-				 
-assign a_valid_data = (a_valid & !a_valid_dly);
+		 .en(a_ready_data),
+                 .d(addition),
+                 .q(a_valid_data));
+				
 
 
 //mul
 			 
 wire m_valid;
-wire m_valid_dly;
 
-assign m_valid = (multiplication /*& m_ready_data*/);							   //(posedge detector)
+assign m_valid = (multiplication /*& m_ready_data*/);							  
 
 d_ff_async_en #(.SIZE(1),
                 .RESET_VALUE(1'b0))
       m_valid_data_reg(.clk(clk),
-                 .rst(!rst_n),
-				 .en(m_ready_data),
-                 .d(m_valid),
-                 .q(m_valid_dly));
-
-assign m_valid_data = (m_valid & !m_valid_dly);
-
+                 .rst(!rst_n | !m_ready_data),
+		 .en(1'b1),
+                 .d(multiplication),
+                 .q(m_valid_data));
 
 
 
