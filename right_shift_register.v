@@ -7,7 +7,7 @@ d,
 d_shift,
 q);
 
-//A roght shift register, loading data in parallel and shifting them right, based on the input shift-load.
+//A right shift register, loading data in parallel and shifting them right, based on the input shift-load.
 
 parameter DATA_SIZE  = 8;
 
@@ -19,10 +19,6 @@ input [(DATA_SIZE-1):0] d;
 input d_shift;
 
 output reg [(DATA_SIZE-1):0] q;
-
-
-//shift right or load
-wire [(DATA_SIZE-1):0] d_in; 
 
 always@(posedge clk, negedge rst_n) begin
     if(!rst_n)

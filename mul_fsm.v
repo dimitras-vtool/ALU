@@ -103,7 +103,7 @@ reg en_reg_id_m; //for id_reg
 
 //Register holding multiplicant               (Reg_A)
 //(loaded only once, along with reg B, 
-//in the beggining of the mul opperation)                                             
+//in the beginning of the mul opperation)                                             
          d_ff_async_en #(.SIZE(MUL_DATA_SIZE),
                          .RESET_VALUE({MUL_DATA_SIZE{1'b0}}))
              load_a_reg(.clk(clk),
@@ -115,7 +115,7 @@ reg en_reg_id_m; //for id_reg
 
 
 //Shift register for multiplier                (Reg_B)
-//(loaded in the begging of the operation,
+//(loaded in the beggining of the operation,
 //right-shifted every cycle (shift-input => reg_C[lsb]))       
         right_shift_register #(.DATA_SIZE(MUL_DATA_SIZE))
              shift_reg_B(.clk(clk),
@@ -128,11 +128,17 @@ reg en_reg_id_m; //for id_reg
 
 
 wire carry_out_reg;
+
+//wire [(MUL_DATA_SIZE-1):0] reg_c_in;
+
+//assign reg_c_in = (en_regA) ? a_in : adder_out; //MUX for loading reg_c in the beginnig of the operation and during
+
+reg reg_c_rstn;
 //Shift register for addition                  (Reg_C)
 //(multiplicant + 0 or mul_c) result
            right_shift_register #(.DATA_SIZE(MUL_DATA_SIZE))
              shift_reg_C(.clk(clk),
-                         .rst_n(rst_n),
+                         .rst_n(rst_n & reg_c_rstn),
                          .en(en_regC),
                          .shift_load(shift_load_mul_c_regC),
                          .d(adder_out),
@@ -168,10 +174,10 @@ add_sub #(.DATA_SIZE(MUL_DATA_SIZE))
 
 //Register holding carry_out from the above addition
 d_ff_async_en #(.SIZE(1),
-             .RESET_VALUE({MUL_DATA_SIZE{1'b0}}))
+             .RESET_VALUE(0))
        carry_reg(.clk(clk),
                  .rst(!rst_n),
-				 .en(1'b1),
+		 .en(1'b1),
                  .d(carry_out),
                  .q(carry_out_reg)); 
  
@@ -189,7 +195,7 @@ d_ff_async_en #(.SIZE(3),
              .RESET_VALUE(IDLE))
        fsm_reg(.clk(clk),
                 .rst(!rst_n),
-				.en(1'b1),
+		.en(1'b1),
                 .d(next_state),
                 .q(state));
 
@@ -228,6 +234,7 @@ always@(*)begin
       en_regA     = 1'b0;
       en_regB     = 1'b0;
       en_regC     = 1'b0;
+      reg_c_rstn  = 1'b1;
       shift_load_mul_r_regB   = 1'b0;
       shift_load_mul_c_regC   = 1'b0;
 	  m_ready_data = 1'b0;
@@ -239,6 +246,7 @@ always@(*)begin
               en_regA = (start);
               en_regB = (start);
 			  en_reg_id_m = (start);
+	      reg_c_rstn = 1'b0;
               end
         TEST: begin
               en_regC = 1'b1;
@@ -267,6 +275,7 @@ always@(*)begin
                  en_regA   = 1'b0;
                  en_regB   = 1'b0;
                  en_regC   = 1'b0;
+	         reg_c_rstn = 1'b1;
                  shift_load_mul_r_regB   = 1'b0;
                  shift_load_mul_c_regC   = 1'b0;      
 				 m_ready_data  = 1'b0;
